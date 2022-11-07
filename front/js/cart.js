@@ -1,5 +1,8 @@
 let panier = [];
 
+const orderButton = document.querySelector("#order")
+orderButton.addEventListener("click", (e) => submitForm(e))
+
 getItemsFromCache();
 
 function getItemsFromCache() {
@@ -88,7 +91,6 @@ function UpdatePrixEtquantity(id, newValue, item) {
 function displayTotalPrice( item, price, panier) {
   const totalPrice = document.querySelector("#totalPrice")
   const total = panier.reduce((total, item) => total = price * item.quantity, 0)
-  console.log(total)
     totalPrice.textContent = total
   }
 
@@ -111,4 +113,94 @@ function listenQuantitychange(article, panier, price) {
     displayTotalQuantity()
     displayTotalPrice(item, price, panier,)
   });
+}
+
+function submitForm(e) {
+  e.preventDefault()
+  if (panier.length === 0) {
+    alert("Selectionnez des articles à acheter SVP")
+    return
+  }
+
+  if (isFormInvalid()) return 
+  if (isEmailInvalid()) return
+  if (isNameInvalid()) return
+  
+  const body = makeRequestBody()
+  fetch("http://localhost:3000/api/products/order", { 
+    method: "POST",
+    body: JSON.stringify(body),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+    .then((res) => res.json())
+    .then((data) => console.log(data))
+}
+
+function isNameInvalid() {
+  const name = document.querySelector("#firstName", "#lastName").value
+  const nameRegex = /^[a-zA-Z\- ]+$/
+  if (nameRegex.test(name) === false) {
+    alert("Merci d'écrire un nom et prenom valides")
+    return true
+  }
+  return false
+}
+
+function isEmailInvalid() {
+  const email = document.querySelector("#email").value
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
+  if (emailRegex.test(email) === false) {
+    alert("Merci d'écrire une adresse mail valide")
+    return true
+  }
+  return false
+}
+
+function isFormInvalid() {
+  const form = document.querySelector(".cart__order__form")
+  const inputs = form.querySelectorAll('input')
+  inputs.forEach((input) => {
+    if (input.value === "") {
+      alert("Remplissez tous les champs SVP")
+      return true
+    }
+    return false
+  })
+}
+
+
+function makeRequestBody() {
+const form = document.querySelector(".cart__order__form")
+  const firstName = form.elements.firstName.value
+  const lastName = form.elements.lastName.value
+  const address = form.elements.address.value
+  const city = form.elements.city.value
+  const email = form.elements.firstName.value
+const body = {
+    contact: {
+      firstName: firstName,
+      lastName: lastName,
+      address: address,
+      city: city,
+      email:  email,
+    },
+    products: getIdsFromCache()
+  }
+  console.log(body)
+  return body
+}
+
+
+function getIdsFromCache() {
+  const numbersOfProducts = localStorage.length 
+  const ids = []
+  for (let i = 0; i < numbersOfProducts; i++) {
+    const key = localStorage.key(i)
+    console.log(key)
+    const id = key.split('-')[1]
+    ids.push(id)
+  }
+  return ids 
 }
