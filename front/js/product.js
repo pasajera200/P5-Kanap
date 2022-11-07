@@ -64,7 +64,7 @@ function kanapColors(colors) {
     });
   }
 }
-
+  
 //Button ajouter au panier qui redirige vers la page cart
 const button = document.querySelector('#addToCart');
 button.addEventListener('click', addTocart);

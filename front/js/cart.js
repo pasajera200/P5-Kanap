@@ -135,7 +135,11 @@ function submitForm(e) {
     }
   })
     .then((res) => res.json())
-    .then((data) => console.log(data))
+    .then((data) => {
+      const orderId = data.orderId
+      window.location.href = "confirmation.html" + "?orderId=" + orderId 
+    }) 
+  .catch((err) => console.error(err))
 }
 
 function isNameInvalid() {
