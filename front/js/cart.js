@@ -41,7 +41,7 @@ function panierItems() {
 
 //Manipulation du DOM. Création des articles avec innerHTML
 function createArticle(sofa, price, item) {
-  TotalPrice(item, price, panier,)
+  TotalPrice(item, price, panier)
   TotalQuantity()
   const article = document.createElement('article');
   article.classList.add('cart__item');
@@ -92,7 +92,7 @@ function deleteItem(article) {
 }*/
 
 //Calcule et affiche le prix total
-function TotalPrice( item, price, panier) {
+function TotalPrice(item, price, panier) {
   const totalPrice = document.querySelector("#totalPrice")
   const total = panier.reduce((total, item) => total = price * item.quantity, 0)
     totalPrice.textContent = total
@@ -115,7 +115,7 @@ function listenQuantityChange(article, panier, price) {
     window.location.reload(true);
     //UpdatePrixEtquantity(data.id, data.quantity) 
     TotalQuantity()
-    TotalPrice(item, price, panier,)
+    TotalPrice(item, price, panier)
   });
 }
 
@@ -151,7 +151,7 @@ function nomEtOuPrenomInvalide() {
   const name = document.querySelector("#firstName", "#lastName").value
   const nameRegex = /^[a-zA-Z\- ]+$/
   if (nameRegex.test(name) === false) {
-    alert("Merci d'écrire un nom et prenom valides")
+    alert("Merci d'écrire un nom et prénom valides")
     return true
   }
   return false
@@ -215,3 +215,35 @@ function recupererIdsFromCache() {
   }
   return ids 
 }
+
+
+// let url = 'http://localhost:3000/api/products/107fb5b75607497b96722bda5b504926';
+
+// async function getPrice(url) {
+//   const response = await fetch(url);
+//   const data = await response.json();
+
+  
+//   return data;
+// }
+
+const data = fetch('http://localhost:3000/api/products/107fb5b75607497b96722bda5b504926')
+  .then((reponse) => reponse.json())
+  .then((result) => {
+    // console.log(result.price);
+    return result.price;
+  });
+
+
+// const priceData = async () => {
+//   const objet = await data;
+//   console.log(objet);
+//   }
+
+let price = data.then(function (resukt) {
+  return resukt + 1;
+});
+
+
+console.log(price);
+
