@@ -6,12 +6,12 @@ if (id != null) {
   let imagUrl, altTexte;
 }
 
-//Nous récupérons les données (array) avec la méthode fetch
+//Récupère les données (array) avec la méthode fetch
 fetch(`http://localhost:3000/api/products/${id}`)
   .then((response) => response.json())
   .then((res) => getProduct(res));
 
-//Nous récupérons tous les parametres des produits
+//Récupére tous les parametres des produits
 function getProduct(canape) {
   const { altTxt, colors, description, imageUrl, name, price, _id } = canape;
   nom = name;
@@ -86,7 +86,8 @@ function commandeInvalide(color, quantity) {
   }
 }
 
-//Subgarder la commande validée sur localStorage
+//Subgarde la commande validée sur localStorage
+//Création d'une clé (key) pour les produits
 function savecommande(color, quantity) {
   const key = `product-${id}-${color}`;
   const data = {

@@ -1,11 +1,14 @@
 let panier = [];
 
+//Button commander qui permet d'envoyer le formulaire pour finaliser l'achat 
 const orderButton = document.querySelector("#order")
-orderButton.addEventListener("click", (e) => submitForm(e))
+orderButton.addEventListener("click", (e) => formulaireCommande(e))
 
-getItemsFromCache();
 
-function getItemsFromCache() {
+//Récupère les produits du localStorage 
+recupererItemsFromCache();
+
+function recupererItemsFromCache() {
   const numbersOfItems = localStorage.length;
   for (let i = 0; i < numbersOfItems; i++) {
     const signature = localStorage.key(i).split('-')[0];
@@ -17,6 +20,7 @@ function getItemsFromCache() {
   }
 }
 
+//Requête fetch pour récupérer les prix des produits qui n'avaient pas été envoyés dans le localStorage
 panierItems();
 
 function panierItems() {
@@ -27,21 +31,22 @@ function panierItems() {
       .then((produits) => {
         const article = createArticle(sofa, produits.price);
         panierItems.appendChild(article);
-        listenQuantitychange(article, sofa, panier);
+        listenQuantityChange(article, sofa, panier);
         deleteItem(article); 
+        //UpdatePrixEtquantity(sofa, produits.price)
       });
   }
   return panier;
 }
 
+//Manipulation du DOM. Création des articles avec innerHTML
 function createArticle(sofa, price, item) {
-  displayTotalPrice(item, price, panier,)
-  displayTotalQuantity()
+  TotalPrice(item, price, panier,)
+  TotalQuantity()
   const article = document.createElement('article');
   article.classList.add('cart__item');
   article.setAttribute = ('data-id', sofa._id);
   article.setAttribute = ('data-color', sofa.color);
- 
   article.innerHTML = `<article class="cart__item" data-id="{product-ID}" data-color="{product-color}"><div class="cart__item__img">
     <img src="${sofa.imageUrl}" alt="Photographie d'un canapé">
   </div>
@@ -69,6 +74,7 @@ function createArticle(sofa, price, item) {
   return article;
 }
 
+//Suprimme un ou plusiers produits
 function deleteItem(article) {
   const buttonSupprimer = article.querySelector('.deleteItem');
   buttonSupprimer.addEventListener('click', (e) => {
@@ -77,56 +83,54 @@ function deleteItem(article) {
   });
 }
 
-
-function UpdatePrixEtquantity(id, newValue, item) {
-  console.log(id)
+//Met à jours le prix et la quantité
+/*function UpdatePrixEtquantity(id, newValue, item) {
   const itemToUpdate = panier.find(item => item.id === id)
-  console.log("newValue", newValue)
   itemToUpdate.quantity = newValue
-  console.log(panier)
-  displayTotalPrice(item, price, panier)
-  displayTotalQuantity()
-}
+  TotalPrice(item, price, panier)
+  TotalQuantity()
+}*/
 
-function displayTotalPrice( item, price, panier) {
+//Calcule et affiche le prix total
+function TotalPrice( item, price, panier) {
   const totalPrice = document.querySelector("#totalPrice")
   const total = panier.reduce((total, item) => total = price * item.quantity, 0)
     totalPrice.textContent = total
   }
 
-function displayTotalQuantity() {
+//Calcule et affiche la quantité total
+function TotalQuantity() {
   const totalQuantity = document.querySelector("#totalQuantity")
   const total = panier.reduce((total, item) => total + item.quantity, 0); 
   totalQuantity.textContent = total; 
 }
 
-
-
-function listenQuantitychange(article, panier, price) {
+//Permet de changer la quantité des produits envoyés dans la page panier
+function listenQuantityChange(article, panier, price) {
   const itemQuantity = article.querySelector('.itemQuantity');
   itemQuantity.addEventListener('change', (e) => {
     let data = JSON.parse(localStorage.getItem(e.target.id));
     data.quantity = parseInt(e.target.value);
     localStorage.setItem(e.target.id, JSON.stringify(data));
     window.location.reload(true);
-    UpdatePrixEtquantity(data.id, data.quantity) 
-    displayTotalQuantity()
-    displayTotalPrice(item, price, panier,)
+    //UpdatePrixEtquantity(data.id, data.quantity) 
+    TotalQuantity()
+    TotalPrice(item, price, panier,)
   });
 }
 
-function submitForm(e) {
+//Requête fecth POST et conditions pour le remplissage du formulaire de contact
+//Redirection vers la page confirmation avec window.location.href
+function formulaireCommande(e) {
   e.preventDefault()
   if (panier.length === 0) {
     alert("Selectionnez des articles à acheter SVP")
     return
   }
-
-  if (isFormInvalid()) return 
-  if (isEmailInvalid()) return
-  if (isNameInvalid()) return
-  
-  const body = makeRequestBody()
+  if (formulaireInvalide()) return 
+  if (emailInvalide()) return
+  if (nomEtOuPrenomInvalide()) return
+  const body = objetContact()
   fetch("http://localhost:3000/api/products/order", { 
     method: "POST",
     body: JSON.stringify(body),
@@ -142,7 +146,8 @@ function submitForm(e) {
   .catch((err) => console.error(err))
 }
 
-function isNameInvalid() {
+//Utilisation de Regex pour la validation du nom et prénom
+function nomEtOuPrenomInvalide() {
   const name = document.querySelector("#firstName", "#lastName").value
   const nameRegex = /^[a-zA-Z\- ]+$/
   if (nameRegex.test(name) === false) {
@@ -152,7 +157,8 @@ function isNameInvalid() {
   return false
 }
 
-function isEmailInvalid() {
+//Utilisation de Regex pour la validation du email
+function emailInvalide() {
   const email = document.querySelector("#email").value
   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
   if (emailRegex.test(email) === false) {
@@ -162,7 +168,8 @@ function isEmailInvalid() {
   return false
 }
 
-function isFormInvalid() {
+//Utilisation de Regex pour la validation du formulaire de contact
+function formulaireInvalide() {
   const form = document.querySelector(".cart__order__form")
   const inputs = form.querySelectorAll('input')
   inputs.forEach((input) => {
@@ -174,8 +181,8 @@ function isFormInvalid() {
   })
 }
 
-
-function makeRequestBody() {
+//Récuperation des données pour le formulaire contact
+function objetContact() {
 const form = document.querySelector(".cart__order__form")
   const firstName = form.elements.firstName.value
   const lastName = form.elements.lastName.value
@@ -190,14 +197,14 @@ const body = {
       city: city,
       email:  email,
     },
-    products: getIdsFromCache()
+    products: recupererIdsFromCache()
   }
   console.log(body)
   return body
 }
 
-
-function getIdsFromCache() {
+//Récuperation des ids des produits envoyés dans le localStorage
+function recupererIdsFromCache() {
   const numbersOfProducts = localStorage.length 
   const ids = []
   for (let i = 0; i < numbersOfProducts; i++) {
