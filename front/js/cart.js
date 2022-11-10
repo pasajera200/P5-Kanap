@@ -22,18 +22,19 @@ function recupererItemsFromCache() {
 
 //Requête fetch pour récupérer les prix des produits qui n'avaient pas été envoyés dans le localStorage
 panierItems();
-
+let getTotalPrice = 0;
 function panierItems() {
   const panierItems = document.getElementById('cart__items');
   for (const sofa of panier) {
     fetch(`http://localhost:3000/api/products/${sofa.id}`)
       .then((response) => response.json())
       .then((produits) => {
+        getTotalPrice = getTotalPrice + produits.price * sofa.quantity;
+        displayTotalPrice(getTotalPrice)
         const article = createArticle(sofa, produits.price);
         panierItems.appendChild(article);
         listenQuantityChange(article, sofa, panier);
         deleteItem(article); 
-        //UpdatePrixEtquantity(sofa, produits.price)
       });
   }
   return panier;
@@ -41,7 +42,7 @@ function panierItems() {
 
 //Manipulation du DOM. Création des articles avec innerHTML
 function createArticle(sofa, price, item) {
-  TotalPrice(item, price, panier)
+  // TotalPrice(item, price, panier)
   TotalQuantity()
   const article = document.createElement('article');
   article.classList.add('cart__item');
@@ -83,20 +84,11 @@ function deleteItem(article) {
   });
 }
 
-//Met à jours le prix et la quantité
-/*function UpdatePrixEtquantity(id, newValue, item) {
-  const itemToUpdate = panier.find(item => item.id === id)
-  itemToUpdate.quantity = newValue
-  TotalPrice(item, price, panier)
-  TotalQuantity()
-}*/
-
-//Calcule et affiche le prix total
-function TotalPrice(item, price, panier) {
-  const totalPrice = document.querySelector("#totalPrice")
-  const total = panier.reduce((total, item) => total = price * item.quantity, 0)
-    totalPrice.textContent = total
-  }
+//Montre le prix total des articles du panier
+function displayTotalPrice(totalPrix) {
+  const totalPrice = document.querySelector("#totalPrice");
+  totalPrice.textContent = totalPrix;
+}
 
 //Calcule et affiche la quantité total
 function TotalQuantity() {
@@ -113,9 +105,7 @@ function listenQuantityChange(article, panier, price) {
     data.quantity = parseInt(e.target.value);
     localStorage.setItem(e.target.id, JSON.stringify(data));
     window.location.reload(true);
-    //UpdatePrixEtquantity(data.id, data.quantity) 
     TotalQuantity()
-    TotalPrice(item, price, panier)
   });
 }
 
@@ -215,35 +205,3 @@ function recupererIdsFromCache() {
   }
   return ids 
 }
-
-
-// let url = 'http://localhost:3000/api/products/107fb5b75607497b96722bda5b504926';
-
-// async function getPrice(url) {
-//   const response = await fetch(url);
-//   const data = await response.json();
-
-  
-//   return data;
-// }
-
-const data = fetch('http://localhost:3000/api/products/107fb5b75607497b96722bda5b504926')
-  .then((reponse) => reponse.json())
-  .then((result) => {
-    // console.log(result.price);
-    return result.price;
-  });
-
-
-// const priceData = async () => {
-//   const objet = await data;
-//   console.log(objet);
-//   }
-
-let price = data.then(function (resukt) {
-  return resukt + 1;
-});
-
-
-console.log(price);
-
