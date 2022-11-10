@@ -9,9 +9,9 @@ const getProduits = async () => {
     });
 };
 
-//La fonction suivante permet d'afficher l'ensemble de produits sur la page d'accueil.
-//La méthode map sert à faire l'iteration des produits
-//Ajout des balises dans le DOM grâce à inner.HTML
+//La fonction suivante permet d'afficher l'ensemble des produits sur la page d'accueil.
+//La méthode map sert à faire l'itération des produits
+//Ajout des balises dans le DOM
 
 const sofaDisplay = async () => {
   await getProduits();

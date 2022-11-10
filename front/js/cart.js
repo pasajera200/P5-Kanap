@@ -20,7 +20,7 @@ function recupererItemsFromCache() {
   }
 }
 
-//Requête fetch pour récupérer les prix des produits qui n'avaient pas été envoyés dans le localStorage
+//Requête Fetch pour récupérer les prix des produits qui n'avaient pas été envoyés dans le localStorage
 panierItems();
 let getTotalPrice = 0;
 function panierItems() {
@@ -40,8 +40,8 @@ function panierItems() {
   return panier;
 }
 
-//Manipulation du DOM. Création des articles avec innerHTML
-function createArticle(sofa, price, item) {
+//Manipulation du DOM. Création des articles
+function createArticle(sofa, price) {
   // TotalPrice(item, price, panier)
   TotalQuantity()
   const article = document.createElement('article');
@@ -75,7 +75,7 @@ function createArticle(sofa, price, item) {
   return article;
 }
 
-//Suprimme un ou plusiers produits
+//Supprime un ou plusieurs produits
 function deleteItem(article) {
   const buttonSupprimer = article.querySelector('.deleteItem');
   buttonSupprimer.addEventListener('click', (e) => {
@@ -109,7 +109,7 @@ function listenQuantityChange(article, panier, price) {
   });
 }
 
-//Requête fecth POST et conditions pour le remplissage du formulaire de contact
+//Requête Fetch POST et conditions pour le remplissage du formulaire de contact
 //Redirection vers la page confirmation avec window.location.href
 function formulaireCommande(e) {
   e.preventDefault()
@@ -147,7 +147,7 @@ function nomEtOuPrenomInvalide() {
   return false
 }
 
-//Utilisation de Regex pour la validation du email
+//Utilisation de Regex pour la validation de l'email
 function emailInvalide() {
   const email = document.querySelector("#email").value
   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
@@ -171,7 +171,7 @@ function formulaireInvalide() {
   })
 }
 
-//Récuperation des données pour le formulaire contact
+//Récupération des données pour le formulaire de contact
 function objetContact() {
 const form = document.querySelector(".cart__order__form")
   const firstName = form.elements.firstName.value
@@ -193,7 +193,7 @@ const body = {
   return body
 }
 
-//Récuperation des ids des produits envoyés dans le localStorage
+//Récupération des ids des produits envoyés dans le localStorage
 function recupererIdsFromCache() {
   const numbersOfProducts = localStorage.length 
   const ids = []

@@ -6,12 +6,12 @@ if (id != null) {
   let imagUrl, altTexte;
 }
 
-//Récupère les données (array) avec la méthode fetch
+//Récupère les données (array) avec la méthode Fetch
 fetch(`http://localhost:3000/api/products/${id}`)
   .then((response) => response.json())
   .then((res) => getProduct(res));
 
-//Récupére tous les parametres des produits
+//Récupère tous les paramètres des produits
 function getProduct(canape) {
   const { altTxt, colors, description, imageUrl, name, price, _id } = canape;
   nom = name;
@@ -69,7 +69,7 @@ function kanapColors(colors) {
 const button = document.querySelector('#addToCart');
 button.addEventListener('click', addTocart);
 
-//Ajouter au panier
+//Ajoute les produits au panier
 function addTocart() {
   const color = document.querySelector('#colors').value;
   const quantity = document.querySelector('#quantity').value;
@@ -86,7 +86,7 @@ function commandeInvalide(color, quantity) {
   }
 }
 
-//Subgarde la commande validée sur localStorage
+//Sauvegarde la commande validée sur localStorage
 //Création d'une clé (key) pour les produits
 function savecommande(color, quantity) {
   const key = `product-${id}-${color}`;

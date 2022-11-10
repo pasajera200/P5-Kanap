@@ -2,7 +2,7 @@ const orderId = recupererOrderId()
 affichageOrderId(orderId)
 effacerCache()
 
-//Récupére l'orderId avec urlParams.get
+//Récupère l'orderId avec urlParams.get
 function recupererOrderId() {
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
@@ -15,7 +15,7 @@ function affichageOrderId() {
     orderIdElement.textContent = orderId
 }
 
-//Suprimme toutes les données envoyées dans le localStorage
+//Supprime toutes les données envoyées dans le localStorage
 function effacerCache() {
     const cache = window.localStorage
     cache.clear()
