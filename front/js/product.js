@@ -1,3 +1,4 @@
+//Utilisation URLSearchParams et window.location.search pour passer un id vers une autre page
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const id = urlParams.get('id');
@@ -82,6 +83,10 @@ function addTocart() {
 function commandeInvalide(color, quantity) {
   if (color == null || color === '' || quantity == null || quantity == 0) {
     alert('SVP, choisissez une couleur et une quantité');
+    return true;
+  }
+  if (quantity <= 0 || quantity > 100) {
+    alert('SVP choississez une quantité valide')
     return true;
   }
 }

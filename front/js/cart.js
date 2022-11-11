@@ -42,7 +42,6 @@ function panierItems() {
 
 //Manipulation du DOM. Création des articles
 function createArticle(sofa, price) {
-  // TotalPrice(item, price, panier)
   TotalQuantity()
   const article = document.createElement('article');
   article.classList.add('cart__item');
@@ -98,7 +97,10 @@ function TotalQuantity() {
 }
 
 //Permet de changer la quantité des produits envoyés dans la page panier
-function listenQuantityChange(article, panier, price) {
+function listenQuantityChange(article) {
+  
+
+  
   const itemQuantity = article.querySelector('.itemQuantity');
   itemQuantity.addEventListener('change', (e) => {
     let data = JSON.parse(localStorage.getItem(e.target.id));
@@ -108,6 +110,8 @@ function listenQuantityChange(article, panier, price) {
     TotalQuantity()
   });
 }
+
+
 
 //Requête Fetch POST et conditions pour le remplissage du formulaire de contact
 //Redirection vers la page confirmation avec window.location.href
@@ -138,9 +142,14 @@ function formulaireCommande(e) {
 
 //Utilisation de Regex pour la validation du nom et prénom
 function nomEtOuPrenomInvalide() {
-  const name = document.querySelector("#firstName", "#lastName").value
+  const name = document.querySelector("#firstName").value
+  const lastName = document.querySelector("#lastName").value
   const nameRegex = /^[a-zA-Z\- ]+$/
   if (nameRegex.test(name) === false) {
+    alert("Merci d'écrire un nom et prénom valides")
+    return true
+  }
+  if (nameRegex.test(lastName) === false) {
     alert("Merci d'écrire un nom et prénom valides")
     return true
   }
